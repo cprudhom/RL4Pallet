@@ -14,39 +14,40 @@ import numpy as np
 class PaletteEnv(gym.Env):
     """
     Description:
-        A pole is attached by an un-actuated joint to a cart, which moves along a frictionless track. The pendulum starts upright, and the goal is to prevent it from falling over by increasing and reducing the cart's velocity.
-
-    Source:
-        This environment corresponds to the version of the cart-pole problem described by Barto, Sutton, and Anderson
+        Un ensemble de colis sont à placer dans un carton.
+        Tous les colis sont identiques: un rectangle de dimension (l x L x h): 2 x 4 x 1.
+        Le carton est de dimension (l x L x h): 6 x 8 x 4.
+        L'objectif est de placer les 24 colis dans le carton.
 
     Observation:
-        Type: Box(4)
-        Num	Observation                 Min         Max
-        0	Cart Position             -4.8            4.8
-        1	Cart Velocity             -Inf            Inf
-        2	Pole Angle                 -24 deg        24 deg
-        3	Pole Velocity At Tip      -Inf            Inf
+        Type: Box(2)
+        Num	Observation                             Min         Max
+        0	Carton vue de dessus (lxL)              0.0         1.0
+        1	Type de colis                             1           1
+        2   Orientations possibles du colis           1           2
+
+        Note:
+            La valeur d'une cellule du carton vue de dessus indique le point le plus haut sur lequel peut reposer un colis.
+            Chaque colis dispose d'un cube référence, permettant de déterminer ses dimensions relatives en fonction de l'orientation.
 
     Actions:
-        Type: Discrete(2)
+        Type: Box(2)
         Num	Action
-        0	Push cart to the left
-        1	Push cart to the right
+        0	(x,y) position du cube référence du colis dans le carton (vue du dessus).
+        1   Orientation du colis
 
-        Note: The amount the velocity that is reduced or increased is not fixed; it depends on the angle the pole is pointing. This is because the center of gravity of the pole increases the amount of energy needed to move the cart underneath it
+        Note: un colis
 
-    Reward:
-        Reward is 1 for every step taken, including the termination step
+    Récompense:
+        La récompense est de 1 à chaque étape et de 100 une fois le dernier colis placé.
 
-    Starting State:
-        All observations are assigned a uniform random value in [-0.05..0.05]
+    Etat de départ:
+        Le carton vue de dessus est valorisé à [[0.0..0.0]..[0.0..0.0]]
 
-    Episode Termination:
-        Pole Angle is more than 12 degrees
-        Cart Position is more than 2.4 (center of the cart reaches the edge of the display)
-        Episode length is greater than 200
-        Solved Requirements
-        Considered solved when the average reward is greater than or equal to 195.0 over 100 consecutive trials.
+    Conditionns d'arrêt:
+        Un colis n'est pas strictement inclus dans le carton
+        Lorsque tous les colis sont placés dans le carton, le problème est considéré comme résolu.
+
     """
 
     metadata = {
