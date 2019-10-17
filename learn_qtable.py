@@ -47,7 +47,7 @@ n_pos_x, n_pos_y, n_ori = env.action_space.spaces['pos_x'].n, \
 print(env.observation_space)
 n_buckets = tuple([env.Z+1 for _ in range(env.X * env.Y)])
 
-episodes = 30000
+episodes = 9000
 
 q_table = np.zeros(n_buckets + tuple([(n_pos_x * n_pos_y) * n_ori]))
 
