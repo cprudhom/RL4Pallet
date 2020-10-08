@@ -57,8 +57,8 @@ class PalletEnv(gym.Env):
     }
 
     def __init__(self):
-        self.X = 2
-        self.Y = 3
+        self.X = 3
+        self.Y = 4
         self.Z = 4
         self.palette = np.zeros(shape=(self.X, self.Y), dtype=int)
         self.dimensions = {
