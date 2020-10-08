@@ -18,6 +18,7 @@ RUN pip install gym
 # Install facets which does not have a pip or conda package at the moment
 WORKDIR $HOME
 RUN git clone https://github.com/cprudhom/RL4Pallet.git && \
+    git checkout student
     cd RL4Pallet && \
     rm -r ./Dockerfile ./NOM_Prenom.ipynb && \
     cd .. && \
