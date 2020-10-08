@@ -19,7 +19,6 @@ RUN pip install gym
 WORKDIR $HOME
 RUN git clone https://github.com/cprudhom/RL4Pallet.git && \
     cd RL4Pallet && \
-    rm -r learn && \
     rm -r ./Dockerfile ./NOM_Prenom.ipynb && \
     cd .. && \
     mv RL4Pallet/* ./  && \
