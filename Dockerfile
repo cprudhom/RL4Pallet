@@ -19,7 +19,8 @@ RUN pip install gym
 WORKDIR $HOME
 RUN git clone https://github.com/cprudhom/RL4Pallet.git && \
     cd RL4Pallet && \
-    #rm ./learn_advanced.py ./learn_qtable.py ./learn_dummy.py ./Dockerfile && \
+    rm -r learn && \
+    rm -r ./Dockerfile ./NOM_Prenom.ipynb && \
     cd .. && \
     mv RL4Pallet/* ./  && \
     pip install -e .  && \
