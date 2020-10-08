@@ -6,6 +6,12 @@ LABEL maintainer="Charles Prud'homme <charles.prudhomme@imt-atlantique.fr>"
 
 USER root
 
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update \
+ && apt-get install -yq --no-install-recommends \
+    python-opengl \
+ && apt-get clean
+
 # Install OpenAI Gym
 RUN pip install gym
 
@@ -13,13 +19,14 @@ RUN pip install gym
 WORKDIR $HOME
 RUN git clone https://github.com/cprudhom/RL4Pallet.git && \
     cd RL4Pallet && \
-    rm ./learn_advanced.py ./learn_qtable.py ./learn_dummy.py ./Dockerfile && \
+    #rm ./learn_advanced.py ./learn_qtable.py ./learn_dummy.py ./Dockerfile && \
     cd .. && \
     mv RL4Pallet/* ./  && \
     pip install -e .  && \
     rm -r RL4Pallet && \
     fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}"
+    fix-permissions "/home/${NB_USER}" && \
+    python3 ./learn_dummy.py
 
 USER $NB_UID
 
