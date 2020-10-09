@@ -26,8 +26,7 @@ RUN git clone https://github.com/cprudhom/RL4Pallet.git && \
     pip install -e .  && \
     rm -r RL4Pallet && \
     fix-permissions "${CONDA_DIR}" && \
-    fix-permissions "/home/${NB_USER}" && \
-    python3 ./learn_dummy.py
+    fix-permissions "/home/${NB_USER}"
 
 USER $NB_UID
 
