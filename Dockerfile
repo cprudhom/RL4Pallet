@@ -12,8 +12,9 @@ RUN apt-get update \
     python-opengl \
  && apt-get clean
 
+
 # Install OpenAI Gym
-RUN pip install gym
+RUN pip install gym pyglet
 
 # Install facets which does not have a pip or conda package at the moment
 WORKDIR $HOME
