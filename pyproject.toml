@@ -1,0 +1,7 @@
+[project]
+name = "gym_pallet"
+version = "0.0.1"
+dependencies = [
+    "gym",
+    "numpy"
+]
