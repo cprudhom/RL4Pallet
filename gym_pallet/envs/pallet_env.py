@@ -19,13 +19,13 @@ class PalletEnv(gym.Env):
         Ce colis dispose de deux orientations possibles:
         - 1 : (l x L x h): 1 x 2 x 1, le cube référence est en (0,0,0),
         - 2: (l x L x h): 2 x 1 x 1, le cube référence est en (0,0,0).
-        Le carton est de dimension (l x L x h): 3 x 4 x 4.
+        Le carton est de dimension (l x L x h): 3 x 4 x 3.
         L'objectif est de placer les 24 colis dans le carton.
 
     Observation:
         Type: Box(4)
         Num	Observation                             Min                             Max
-        0	Carton vue de dessus                    [[.0,..,.0]...[.0,..,.0]]       [[4.,..,4.]...[4.,..,4.]]
+        0	Carton vue de dessus                    [[.0,..,.0]...[.0,..,.0]]       [[3.,..,3.]...[3.,..,3.]]
         1	Type de colis                           1                               1
 
         Note:
@@ -59,7 +59,9 @@ class PalletEnv(gym.Env):
     def __init__(self):
         self.X = 3
         self.Y = 4
-        self.Z = 4
+        self.Z = 3
+        self.nbMax = self.X * self.Y * self.Z // 2
+        self.C = self.nbMax
         self.palette = np.zeros(shape=(self.X, self.Y), dtype=int)
         self.dimensions = {
             0: (1, 2, 1),
@@ -83,6 +85,7 @@ class PalletEnv(gym.Env):
 
     def step(self, action):
         assert self.action_space.contains(action), "%s (%s) invalid" % (action, type(action))
+        self.C -= 1
         x = action['pos_x']
         y = action['pos_y']
         dx, dy, dz = self.dimensions[action['ori']]
@@ -102,7 +105,7 @@ class PalletEnv(gym.Env):
                 if max < self.palette[i, j]:
                     max = self.palette[i, j]
                 area.append((i, j))
-                if self.palette[i, j] >= self.Z:
+                if self.palette[i, j] > self.Z:
                     done = True
                     pass
 
@@ -115,9 +118,9 @@ class PalletEnv(gym.Env):
                       "type": 0}
         if min == self.Z - 1 and max == self.Z - 1:
             done = True
-            reward = 1.0
+            reward = 100.0
         elif not done:
-            reward = 1.0
+            reward = self.nbMax - self.C
         else:
             reward = 0.0
         return self.state, reward, done, {}
@@ -127,6 +130,7 @@ class PalletEnv(gym.Env):
         self.state = {"fill": self.palette,
                       "type": 0}
         self.steps_beyond_done = None
+        self.C = self.nbMax
         return self.state
 
     def render(self, mode='human'):
@@ -174,7 +178,7 @@ class PalletEnv(gym.Env):
         # update color wrt to fulfilment
         for (x, y), value in np.ndenumerate(self.palette):
             cell = self.grid[x, y]
-            col = self.palette[x, y] / (self.Z - 1)
+            col = self.palette[x, y] / (self.Z)
             cell.set_color(col, col, col)
 
         return self.viewer.render(return_rgb_array=mode == 'rgb_array')
